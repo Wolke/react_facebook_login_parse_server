@@ -3,30 +3,16 @@ import * as Parse from "parse";
 import { User } from "parse";
 import FacebookLogin from 'react-facebook-login';
 
+Parse.initialize("xxxxx", "xxxxx");
+(Parse as any).serverURL = window.location.protocol + "//" + window.location.hostname + "/parse";
+    
 // const FB = {} as any;
 const responseFacebook = (response) => {
-    console.log(response);
-    Parse.initialize("xxxxx", "xxxxx");
-    // (Parse as any).serverURL = window.location.protocol + "//" + window.location.hostname + "/parse";
-    (Parse as any).serverURL = "https://09191429.ngrok.io/parse";
+    // (Parse as any).serverURL = "https://09191429.ngrok.io/parse";
 
     Parse.FacebookUtils.init();
     // Parse.FacebookUtils.isLinked(Parse.User.current());
-    // let user = Parse.User.current();
-    // if (user === null) {
-    //     Parse.User.signUp("aaaabbb", "bbbb", null).done(user => {
-    //         if (!Parse.FacebookUtils.isLinked(user)) {
-    //             Parse.FacebookUtils.link(user, null, {
-    //                 success: function (user) {
-    //                     alert("Woohoo, user logged in with Facebook!");
-    //                 },
-    //                 error: function (user, error) {
-    //                     alert("User cancelled the Facebook login or did not fully authorize.");
-    //                 }
-    //             });
-    //         }
-    //     })
-    // }
+
 
 
     Parse.FacebookUtils.logIn(null, {
@@ -42,15 +28,32 @@ const responseFacebook = (response) => {
             alert("User cancelled the Facebook login or did not fully authorize.");
         }
     });
+}
 
-
+const signupUser = () => {
+    let user = Parse.User.current();
+    if (user === null) {
+        Parse.User.signUp("aaaabbb", "bbbb", null).done(user => {
+            if (!Parse.FacebookUtils.isLinked(user)) {
+                Parse.FacebookUtils.link(user, null, {
+                    success: function (user) {
+                        alert("Woohoo, user logged in with Facebook!");
+                    },
+                    error: function (user, error) {
+                        alert("User cancelled the Facebook login or did not fully authorize.");
+                    }
+                });
+            }
+        })
+    }
 }
 
 
 export class App extends React.Component<{
 }, {
     }> {
-   
+
+
     render() {
         let style = {
             height: "100%",
@@ -65,9 +68,12 @@ export class App extends React.Component<{
 
         return (
             <div style={style}>
-                <a href="/" >home</a>
+                <button onClick={() => {
+                    signupUser();
+                    console.log("begin")
+                }} >signup || login</button>
                 <FacebookLogin
-                    appId="519736548213789"
+                    appId="xxxx"
                     autoLoad={true}
                     fields="name,email,picture"
                     callback={responseFacebook}
